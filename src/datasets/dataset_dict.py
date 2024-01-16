@@ -1685,13 +1685,13 @@ class DatasetDict(dict):
 
         api = HfApi(endpoint=config.HF_ENDPOINT, token=token)
 
-        _ = api.create_repo(
-            repo_id,
-            token=token,
-            repo_type="dataset",
-            private=private,
-            exist_ok=True,
-        )
+        # _ = api.create_repo(
+        #     repo_id,
+        #     token=token,
+        #     repo_type="dataset",
+        #     private=private,
+        #     exist_ok=True,
+        # )
 
         if revision is not None:
             api.create_branch(repo_id, branch=revision, token=token, repo_type="dataset", exist_ok=True)
