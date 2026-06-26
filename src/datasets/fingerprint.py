@@ -281,7 +281,7 @@ def update_fingerprint(fingerprint, transform, transform_args):
         except:  # noqa various errors might raise here from pickle or dill
             if _CACHING_ENABLED:
                 if not fingerprint_warnings.get("update_fingerprint_transform_hash_failed", False):
-                    logger.warning(
+                    raise RuntimeError(
                         f"Parameter '{key}'={transform_args[key]} of the transform {transform} couldn't be hashed properly, a random hash was used instead. "
                         "Make sure your transforms and parameters are serializable with pickle or dill for the dataset fingerprinting and caching to work. "
                         "If you reuse this transform, the caching mechanism will consider it to be different from the previous calls and recompute everything. "
