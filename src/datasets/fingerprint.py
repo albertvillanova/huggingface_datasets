@@ -258,16 +258,22 @@ def update_fingerprint(fingerprint, transform, transform_args):
         hasher.update(transform)
     except:  # noqa various errors might raise here from pickle or dill
         if _CACHING_ENABLED:
-            if not fingerprint_warnings.get("update_fingerprint_transform_hash_failed", False):
-                logger.warning(
-                    f"Transform {transform} couldn't be hashed properly, a random hash was used instead. "
-                    "Make sure your transforms and parameters are serializable with pickle or dill for the dataset fingerprinting and caching to work. "
-                    "If you reuse this transform, the caching mechanism will consider it to be different from the previous calls and recompute everything. "
-                    "This warning is only shown once. Subsequent hashing failures won't be shown."
-                )
-                fingerprint_warnings["update_fingerprint_transform_hash_failed"] = True
-            else:
-                logger.info(f"Transform {transform} couldn't be hashed properly, a random hash was used instead.")
+            raise RuntimeError(
+                f"Transform {transform} couldn't be hashed properly, a random hash was used instead. "
+                "Make sure your transforms and parameters are serializable with pickle or dill for the dataset fingerprinting and caching to work. "
+                "If you reuse this transform, the caching mechanism will consider it to be different from the previous calls and recompute everything. "
+                "This warning is only shown once. Subsequent hashing failures won't be shown."
+            )
+            # if not fingerprint_warnings.get("update_fingerprint_transform_hash_failed", False):
+            #     logger.warning(
+            #         f"Transform {transform} couldn't be hashed properly, a random hash was used instead. "
+            #         "Make sure your transforms and parameters are serializable with pickle or dill for the dataset fingerprinting and caching to work. "
+            #         "If you reuse this transform, the caching mechanism will consider it to be different from the previous calls and recompute everything. "
+            #         "This warning is only shown once. Subsequent hashing failures won't be shown."
+            #     )
+            #     fingerprint_warnings["update_fingerprint_transform_hash_failed"] = True
+            # else:
+            #     logger.info(f"Transform {transform} couldn't be hashed properly, a random hash was used instead.")
         else:
             logger.info(
                 f"Transform {transform} couldn't be hashed properly, a random hash was used instead. This doesn't affect caching since it's disabled."
@@ -280,18 +286,24 @@ def update_fingerprint(fingerprint, transform, transform_args):
             hasher.update(transform_args[key])
         except:  # noqa various errors might raise here from pickle or dill
             if _CACHING_ENABLED:
-                if not fingerprint_warnings.get("update_fingerprint_transform_hash_failed", False):
-                    raise RuntimeError(
-                        f"Parameter '{key}'={transform_args[key]} of the transform {transform} couldn't be hashed properly, a random hash was used instead. "
-                        "Make sure your transforms and parameters are serializable with pickle or dill for the dataset fingerprinting and caching to work. "
-                        "If you reuse this transform, the caching mechanism will consider it to be different from the previous calls and recompute everything. "
-                        "This warning is only shown once. Subsequent hashing failures won't be shown."
-                    )
-                    fingerprint_warnings["update_fingerprint_transform_hash_failed"] = True
-                else:
-                    logger.info(
-                        f"Parameter '{key}'={transform_args[key]} of the transform {transform} couldn't be hashed properly, a random hash was used instead."
-                    )
+                raise RuntimeError(
+                    f"Parameter '{key}'={transform_args[key]} of the transform {transform} couldn't be hashed properly, a random hash was used instead. "
+                    "Make sure your transforms and parameters are serializable with pickle or dill for the dataset fingerprinting and caching to work. "
+                    "If you reuse this transform, the caching mechanism will consider it to be different from the previous calls and recompute everything. "
+                    "This warning is only shown once. Subsequent hashing failures won't be shown."
+                )
+                # if not fingerprint_warnings.get("update_fingerprint_transform_hash_failed", False):
+                #     logger.warning(
+                #         f"Parameter '{key}'={transform_args[key]} of the transform {transform} couldn't be hashed properly, a random hash was used instead. "
+                #         "Make sure your transforms and parameters are serializable with pickle or dill for the dataset fingerprinting and caching to work. "
+                #         "If you reuse this transform, the caching mechanism will consider it to be different from the previous calls and recompute everything. "
+                #         "This warning is only shown once. Subsequent hashing failures won't be shown."
+                #     )
+                #     fingerprint_warnings["update_fingerprint_transform_hash_failed"] = True
+                # else:
+                #     logger.info(
+                #         f"Parameter '{key}'={transform_args[key]} of the transform {transform} couldn't be hashed properly, a random hash was used instead."
+                #     )
             else:
                 logger.info(
                     f"Parameter '{key}'={transform_args[key]} of the transform {transform} couldn't be hashed properly, a random hash was used instead. This doesn't affect caching since it's disabled."
